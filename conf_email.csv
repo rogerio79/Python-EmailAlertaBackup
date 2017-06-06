@@ -1,0 +1,7 @@
+from=seuemail@email.com
+to=destino@email.com
+subject=Email Aviso Python
+message=teste de mensagem 
+smtp_ssl=mail.seuprovedor.com.br
+login=seuemail@email.com
+password=suasenha
