@@ -5,6 +5,7 @@ import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
+
 def abre_arquivo(arquivo) :
     aux_z = {}
     with open(arquivo) as csvarquivo:
@@ -15,13 +16,16 @@ def abre_arquivo(arquivo) :
 
 		
 def envia_email():
+
+	ultimo_arquivo = verifica_arquivo()
+
 	conf = abre_arquivo('conf_email.csv')
 
 	msg = MIMEMultipart()
 	msg['From'] = conf['from']
 	msg['To'] = conf['to']
 	msg['Subject'] = conf['subject']
-	message = conf['message']
+	message = conf['message']+' : '+ultimo_arquivo
 	msg.attach(MIMEText(message))
 
 	mailserver = smtplib.SMTP_SSL(conf['smtp_ssl'])
@@ -50,11 +54,12 @@ def verifica_arquivo():
 
 	for (dirpath, dirnames, filenames) in os.walk(mypath):
 		f.extend(filenames)
+		diretorio = dirpath
 
-	
+
 	for arquivo in f:
-		data = os.stat(arquivo).st_ctime
-		tamanho = os.stat(arquivo).st_size
+		data = os.stat(diretorio+arquivo).st_ctime
+		tamanho = os.stat(diretorio+arquivo).st_size
 		z.append([arquivo, data, tamanho])
 
 		
@@ -62,7 +67,7 @@ def verifica_arquivo():
 
 	ultimo_criado, data_criado, tam_criado = z_ordenado[0]
 
-	print(ultimo_criado, str(datetime.datetime.fromtimestamp(data_criado)), float(tam_criado))
+	return ultimo_criado+', '+str(datetime.datetime.fromtimestamp(data_criado))+', '+str(tam_criado)
 
 envia_email()
 
